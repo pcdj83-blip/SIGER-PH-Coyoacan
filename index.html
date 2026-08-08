@@ -444,16 +444,26 @@ function sigerRespuesta(respuesta) {
 
   if (respuesta.ok) {
 
-    mostrarResultado(
-      "✓ Backend recibió: " +
-      respuesta.codigo
-    );
+    const mensaje = `
+      ✓ PUNTO IDENTIFICADO
+
+      ${respuesta.punto || "Sin nombre"}
+
+      ${respuesta.piso || ""}
+
+      Código: ${respuesta.codigo}
+
+      Estado: ${respuesta.estado || "Sin estado"}
+    `;
+
+    mostrarResultado(mensaje);
 
   } else {
 
     mostrarError(
-      respuesta.mensaje ||
-      "Error en el backend."
+      "⚠ " +
+      (respuesta.mensaje ||
+      "El punto no pudo ser identificado.")
     );
 
   }
@@ -462,7 +472,7 @@ function sigerRespuesta(respuesta) {
 
     escaneoProcesado = false;
 
-  }, 2000);
+  }, 2500);
 
 }
 
