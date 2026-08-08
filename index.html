@@ -585,11 +585,59 @@ mostrarHistorial();
 
   }
 
+const puntosRegistrados =
+  historialRecorrido.length;
 
-  const confirmar =
-    confirm(
-      "¿Deseas finalizar este recorrido?"
-    );
+const faltantes =
+  Math.max(
+    totalPuntos - puntosRegistrados,
+    0
+  );
+
+let mensajeConfirmacion;
+
+if (
+  totalPuntos > 0 &&
+  puntosRegistrados < totalPuntos
+) {
+
+  mensajeConfirmacion =
+    "⚠️ RECORRIDO INCOMPLETO\n\n" +
+    "Puntos registrados: " +
+    puntosRegistrados +
+    " de " +
+    totalPuntos +
+    "\n" +
+    "Puntos faltantes: " +
+    faltantes +
+    "\n\n" +
+    "¿Deseas finalizar el recorrido de todos modos?";
+
+} else if (
+  totalPuntos > 0 &&
+  puntosRegistrados >= totalPuntos
+) {
+
+  mensajeConfirmacion =
+    "✅ RECORRIDO COMPLETO\n\n" +
+    "Se registraron todos los puntos: " +
+    puntosRegistrados +
+    " de " +
+    totalPuntos +
+    ".\n\n" +
+    "¿Deseas finalizar el recorrido?";
+
+} else {
+
+  mensajeConfirmacion =
+    "¿Deseas finalizar este recorrido?";
+
+}
+    
+ const confirmar =
+  confirm(
+    mensajeConfirmacion
+  );
 
 
   if (!confirmar) {
