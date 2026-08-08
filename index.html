@@ -157,6 +157,42 @@
       color: #991b1b;
     }
 
+    .historial {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.historial-titulo {
+  font-weight: bold;
+  color: #374151;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.historial-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 13px;
+  color: #374151;
+}
+
+.historial-item:last-child {
+  border-bottom: none;
+}
+
+.historial-codigo {
+  font-weight: bold;
+  color: #166534;
+}
+
+.historial-hora {
+  color: #6b7280;
+  font-size: 12px;
+}
+    
     .back {
       margin-top: 15px;
       background: #374151;
@@ -260,6 +296,18 @@
 
     </div>
 
+    <div id="historial" class="historial">
+
+  <div class="historial-titulo">
+    Puntos registrados
+  </div>
+
+  <div id="listaHistorial">
+    Aún no hay puntos registrados.
+  </div>
+
+</div>
+    
     <button
   onclick="finalizarRecorrido()"
   class="btn-finalizar">
@@ -306,6 +354,16 @@ let scannerQR = null;
 let escaneoProcesado = false;
 
 let idRecorrido = null;
+
+/*
+ * Puntos registrados durante el recorrido actual
+ */
+let puntosRecorridos = new Set();
+
+/*
+ * Historial visual del recorrido
+ */
+let historialRecorrido = [];
 
 /* =====================================================
    INICIAR RECORRIDO
@@ -377,6 +435,14 @@ function sigerInicioRespuesta(respuesta) {
   idRecorrido =
     respuesta.idRecorrido;
 
+  /*
+ * Iniciamos un historial nuevo
+ */
+puntosRecorridos = new Set();
+
+historialRecorrido = [];
+
+mostrarHistorial();
 
   /*
    * Mostramos usuario e ID del recorrido
@@ -627,9 +693,32 @@ function codigoDetectado(codigo) {
 
   escaneoProcesado = true;
 
+
+  /*
+   * Evitar registrar dos veces
+   * el mismo punto durante el recorrido.
+   */
+  if (puntosRecorridos.has(codigo)) {
+
+    mostrarError(
+      "⚠ Este punto ya fue registrado en este recorrido.\n\n" +
+      codigo
+    );
+
+    setTimeout(function() {
+
+      escaneoProcesado = false;
+
+    }, 1800);
+
+    return;
+  }
+
+
   mostrarResultado(
     "QR leído: " + codigo
   );
+
 
   enviarAlBackend(codigo);
 
@@ -725,6 +814,39 @@ function sigerRespuesta(respuesta) {
 
   if (respuesta.ok) {
 
+    /*
+     * Guardamos el código como registrado
+     */
+    puntosRecorridos.add(
+      respuesta.codigo
+    );
+
+
+    /*
+     * Agregamos al historial visual
+     */
+    historialRecorrido.push({
+
+      codigo:
+        respuesta.codigo,
+
+      punto:
+        respuesta.punto ||
+        "Sin nombre",
+
+      piso:
+        respuesta.piso ||
+        "",
+
+      hora:
+        new Date()
+
+    });
+
+
+    mostrarHistorial();
+
+
     const mensaje = `
       ✓ PUNTO IDENTIFICADO
 
@@ -737,26 +859,29 @@ function sigerRespuesta(respuesta) {
       Estado: ${respuesta.estado || "Sin estado"}
     `;
 
+
     mostrarResultado(mensaje);
 
   } else {
 
     mostrarError(
       "⚠ " +
-      (respuesta.mensaje ||
-      "El punto no pudo ser identificado.")
+      (
+        respuesta.mensaje ||
+        "El punto no pudo ser identificado."
+      )
     );
 
   }
+
 
   setTimeout(function() {
 
     escaneoProcesado = false;
 
-  }, 2500);
+  }, 1500);
 
 }
-
 
 /* =====================================================
    MENSAJES
@@ -775,6 +900,68 @@ function mostrarResultado(mensaje) {
 
 }
 
+  function mostrarHistorial() {
+
+  const lista =
+    document.getElementById(
+      "listaHistorial"
+    );
+
+
+  if (!lista) {
+    return;
+  }
+
+
+  if (historialRecorrido.length === 0) {
+
+    lista.textContent =
+      "Aún no hay puntos registrados.";
+
+    return;
+
+  }
+
+
+  /*
+   * Mostramos primero los más recientes.
+   * Limitamos visualmente a los últimos 8.
+   */
+
+  const ultimos =
+    historialRecorrido
+      .slice(-8)
+      .reverse();
+
+
+  lista.innerHTML =
+    ultimos.map(function(item) {
+
+      return `
+        <div class="historial-item">
+
+          <div class="historial-codigo">
+            ✓ ${item.codigo}
+          </div>
+
+          <div>
+            ${item.punto}
+          </div>
+
+          <div>
+            ${item.piso}
+          </div>
+
+          <div class="historial-hora">
+            ${item.hora.toLocaleTimeString()}
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
 
 function mostrarError(mensaje) {
 
@@ -850,6 +1037,14 @@ function mostrarInicio() {
 
   document.getElementById("resultado").textContent =
     "Esperando código QR...";
+
+  puntosRecorridos = new Set();
+
+historialRecorrido = [];
+
+mostrarHistorial();
+
+idRecorrido = null;
 
 }
 
