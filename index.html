@@ -324,7 +324,9 @@
 
   <div>
     <strong>Puntos registrados:</strong>
-    <span id="cantidadPuntos">0</span>
+<span id="cantidadPuntos">0</span>
+de
+<span id="totalPuntos">0</span>
   </div>
 
   <div>
@@ -392,6 +394,8 @@ let scannerQR = null;
 let escaneoProcesado = false;
 
 let idRecorrido = null;
+
+  let totalPuntos = 0;
 
 /*
  * Puntos registrados durante el recorrido actual
@@ -472,6 +476,9 @@ function sigerInicioRespuesta(respuesta) {
 
   idRecorrido =
     respuesta.idRecorrido;
+
+  totalPuntos =
+  Number(respuesta.totalPuntos) || 0;
 
   /*
  * Iniciamos un historial nuevo
@@ -955,6 +962,11 @@ function mostrarResultado(mensaje) {
     "cantidadPuntos"
   );
 
+   const total =
+  document.getElementById(
+    "totalPuntos"
+  ); 
+    
 const ultimo =
   document.getElementById(
     "ultimoPunto"
@@ -967,6 +979,13 @@ if (cantidad) {
 
 }
 
+   if (total) {
+
+  total.textContent =
+    totalPuntos;
+
+} 
+    
 if (ultimo) {
 
   if (historialRecorrido.length > 0) {
