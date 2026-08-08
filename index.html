@@ -2,25 +2,227 @@
 <html lang="es">
 
 <head>
+  <meta charset="UTF-8">
 
-    <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+  <title>SIGER - Coyoacán</title>
 
-    <title>SIGER</title>
+  <style>
 
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      background: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: #111827;
+      color: white;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 38px;
+      font-weight: bold;
+      letter-spacing: 3px;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    .content {
+      flex: 1;
+      padding: 30px 22px;
+    }
+
+    .welcome {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .welcome h2 {
+      margin: 0 0 10px 0;
+      color: #1f2937;
+    }
+
+    .welcome p {
+      margin: 0;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .field {
+      margin-bottom: 25px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    select {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 16px;
+      background: white;
+    }
+
+    .button {
+      width: 100%;
+      padding: 17px;
+      border: none;
+      border-radius: 10px;
+      background: #006847;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .button:active {
+      transform: scale(0.98);
+    }
+
+    .button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 18px;
+      color: #9ca3af;
+      font-size: 12px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+  </style>
 </head>
 
 <body>
 
-    <h1>SIGER</h1>
+  <div class="app">
 
-    <p>
+    <header class="header">
+
+      <div class="logo">
+        SIGER
+      </div>
+
+      <div class="subtitle">
         Sistema Integral de Gestión de Recorridos
-    </p>
+      </div>
 
-    <p>
+    </header>
+
+    <main class="content">
+
+      <div class="welcome">
+
+        <h2>
+          Iniciar recorrido
+        </h2>
+
+        <p>
+          Selecciona el usuario para comenzar.
+        </p>
+
+      </div>
+
+      <div class="field">
+
+        <label for="usuario">
+          Usuario
+        </label>
+
+        <select id="usuario">
+
+          <option value="">
+            Seleccionar usuario
+          </option>
+
+          <option value="demo">
+            Usuario de prueba
+          </option>
+
+        </select>
+
+      </div>
+
+      <button
+        id="btnIniciar"
+        class="button"
+        onclick="iniciarRecorrido()">
+
+        INICIAR RECORRIDO
+
+      </button>
+
+    </main>
+
+    <footer class="footer">
+
+      SIGER PH - Coyoacán<br>
+      Versión 1.0
+
+    </footer>
+
+  </div>
+
+
+  <script>
+
+    function iniciarRecorrido() {
+
+      const usuario =
+        document.getElementById("usuario").value;
+
+      if (!usuario) {
+
+        alert("Selecciona un usuario para continuar.");
+
+        return;
+
+      }
+
+      alert(
+        "Recorrido iniciado correctamente."
+      );
+
+    }
+
+  </script>
+
+</body>
+
+</html>
         Frontend funcionando correctamente.
     </p>
 
