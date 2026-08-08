@@ -10,7 +10,6 @@
 
   <title>SIGER - Coyoacán</title>
 
-  <!-- Lector QR -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
@@ -127,6 +126,7 @@
       background: #f3f4f6;
       text-align: center;
       color: #374151;
+      word-break: break-word;
     }
 
     .success {
@@ -160,8 +160,6 @@
 
 <div class="app">
 
-  <!-- ENCABEZADO -->
-
   <header class="header">
 
     <div class="logo">
@@ -175,7 +173,7 @@
   </header>
 
 
-  <!-- PANTALLA INICIAL -->
+  <!-- INICIO -->
 
   <main id="inicio" class="content">
 
@@ -190,7 +188,6 @@
       </p>
 
     </div>
-
 
     <div class="field">
 
@@ -212,7 +209,6 @@
 
     </div>
 
-
     <button onclick="iniciarRecorrido()">
 
       INICIAR RECORRIDO
@@ -222,7 +218,7 @@
   </main>
 
 
-  <!-- PANTALLA DE ESCANEO -->
+  <!-- ESCANEO -->
 
   <main id="scanner" class="content scanner">
 
@@ -238,16 +234,13 @@
 
     </div>
 
-
     <div id="reader"></div>
-
 
     <div id="resultado" class="status">
 
       Esperando código QR...
 
     </div>
-
 
     <button
       class="back"
@@ -272,184 +265,302 @@
 
 <script>
 
-  const URL_BACKEND = "https://script.google.com/macros/s/AKfycbywz0RkRwfK8x3goP7_fprReHnD3A3FI5xI7cuoxG3S8CxLv8FZfLkRnfva6wWxsiuC/exec";
-  
-  let scannerQR = null;
+/* =====================================================
+   CONFIGURACIÓN
+   ===================================================== */
 
-  let escaneoProcesado = false;
-
-
-  function iniciarRecorrido() {
-
-    const usuario =
-      document.getElementById("usuario").value;
+const URL_BACKEND =
+  "https://script.google.com/macros/s/AKfycbywz0RkRwfK8x3goP7_fprReHnD3A3FI5xI7cuoxG3S8CxLv8FZfLkRnfva6wWxsiuC/exec";
 
 
-    if (!usuario) {
+/* =====================================================
+   VARIABLES
+   ===================================================== */
 
-      alert("Selecciona un usuario para continuar.");
+let scannerQR = null;
 
-      return;
-
-    }
-
-
-    document.getElementById("inicio").style.display = "none";
-
-    document.getElementById("scanner").style.display = "block";
+let escaneoProcesado = false;
 
 
-    document.getElementById("usuarioActivo").textContent =
-      "Usuario de prueba";
+/* =====================================================
+   INICIAR RECORRIDO
+   ===================================================== */
 
+function iniciarRecorrido() {
 
-    iniciarCamara();
+  const usuario =
+    document.getElementById("usuario").value;
 
-  }
+  if (!usuario) {
 
+    alert("Selecciona un usuario para continuar.");
 
-  function iniciarCamara() {
-
-    scannerQR = new Html5Qrcode("reader");
-
-
-    const configuracion = {
-
-      fps: 10,
-
-      qrbox: {
-        width: 250,
-        height: 250
-      },
-
-      aspectRatio: 1.0
-
-    };
-
-
-    scannerQR.start(
-
-      {
-        facingMode: "environment"
-      },
-
-      configuracion,
-
-      codigoDetectado,
-
-      errorEscaneo
-
-    )
-
-    .catch(function(error) {
-
-      mostrarError(
-        "No fue posible acceder a la cámara."
-      );
-
-      console.error(error);
-
-    });
+    return;
 
   }
 
+  document.getElementById("inicio").style.display =
+    "none";
 
-  function codigoDetectado(codigo) {
+  document.getElementById("scanner").style.display =
+    "block";
 
-    if (escaneoProcesado) {
-      return;
-    }
+  document.getElementById("usuarioActivo").textContent =
+    "Usuario de prueba";
 
+  iniciarCamara();
 
-    escaneoProcesado = true;
-
-
-    document.getElementById("resultado").className =
-      "status success";
-
-
-    document.getElementById("resultado").textContent =
-      "✓ Código detectado: " + codigo;
+}
 
 
-    console.log("QR detectado:", codigo);
+/* =====================================================
+   CÁMARA
+   ===================================================== */
+
+function iniciarCamara() {
+
+  scannerQR =
+    new Html5Qrcode("reader");
+
+  const configuracion = {
+
+    fps: 10,
+
+    qrbox: {
+      width: 250,
+      height: 250
+    },
+
+    aspectRatio: 1.0
+
+  };
+
+  scannerQR.start(
+
+    {
+      facingMode: "environment"
+    },
+
+    configuracion,
+
+    codigoDetectado,
+
+    errorEscaneo
+
+  )
+
+  .catch(function(error) {
+
+    mostrarError(
+      "No fue posible acceder a la cámara."
+    );
+
+    console.error(error);
+
+  });
+
+}
 
 
-    setTimeout(function() {
+/* =====================================================
+   QR DETECTADO
+   ===================================================== */
 
-      escaneoProcesado = false;
+function codigoDetectado(codigo) {
 
-    }, 2000);
+  if (escaneoProcesado) {
+    return;
+  }
+
+  escaneoProcesado = true;
+
+  mostrarResultado(
+    "QR leído: " + codigo
+  );
+
+  enviarAlBackend(codigo);
+
+}
+
+
+/* =====================================================
+   ENVIAR A APPS SCRIPT
+   ===================================================== */
+
+function enviarAlBackend(codigo) {
+
+  if (
+    !URL_BACKEND ||
+    URL_BACKEND.includes("PEGA_AQUI")
+  ) {
+
+    mostrarError(
+      "La URL del backend todavía no está configurada."
+    );
+
+    escaneoProcesado = false;
+
+    return;
 
   }
 
+  const callback =
+    "sigerRespuesta";
 
-  function errorEscaneo(error) {
+  const url =
+    URL_BACKEND +
+    "?codigo=" +
+    encodeURIComponent(codigo) +
+    "&callback=" +
+    callback;
 
-    // Los errores normales de lectura
-    // no necesitan mostrarse al usuario.
+  const script =
+    document.createElement("script");
+
+  script.src = url;
+
+  script.onerror = function() {
+
+    mostrarError(
+      "No fue posible comunicarse con SIGER."
+    );
+
+    escaneoProcesado = false;
+
+    script.remove();
+
+  };
+
+  document.body.appendChild(script);
+
+}
+
+
+/* =====================================================
+   RESPUESTA DEL BACKEND
+   ===================================================== */
+
+function sigerRespuesta(respuesta) {
+
+  if (respuesta.ok) {
+
+    mostrarResultado(
+      "✓ Backend recibió: " +
+      respuesta.codigo
+    );
+
+  } else {
+
+    mostrarError(
+      respuesta.mensaje ||
+      "Error en el backend."
+    );
+
+  }
+
+  setTimeout(function() {
+
+    escaneoProcesado = false;
+
+  }, 2000);
+
+}
+
+
+/* =====================================================
+   MENSAJES
+   ===================================================== */
+
+function mostrarResultado(mensaje) {
+
+  const resultado =
+    document.getElementById("resultado");
+
+  resultado.className =
+    "status success";
+
+  resultado.textContent =
+    mensaje;
+
+}
+
+
+function mostrarError(mensaje) {
+
+  const resultado =
+    document.getElementById("resultado");
+
+  resultado.className =
+    "status error";
+
+  resultado.textContent =
+    mensaje;
+
+}
+
+
+/* =====================================================
+   ERROR DEL ESCÁNER
+   ===================================================== */
+
+function errorEscaneo(error) {
+
+  // No mostramos los errores normales
+  // mientras el lector busca un QR.
+
+}
+
+
+/* =====================================================
+   VOLVER
+   ===================================================== */
+
+function volverInicio() {
+
+  if (scannerQR) {
+
+    scannerQR.stop()
+
+      .then(function() {
+
+        scannerQR.clear();
+
+        scannerQR = null;
+
+        mostrarInicio();
+
+      })
+
+      .catch(function() {
+
+        mostrarInicio();
+
+      });
+
+  } else {
+
+    mostrarInicio();
 
   }
 
-
-  function mostrarError(mensaje) {
-
-    const resultado =
-      document.getElementById("resultado");
-
-    resultado.className =
-      "status error";
-
-    resultado.textContent =
-      mensaje;
-
-  }
+}
 
 
-  function volverInicio() {
+function mostrarInicio() {
 
-    if (scannerQR) {
+  document.getElementById("scanner").style.display =
+    "none";
 
-      scannerQR.stop()
-        .then(function() {
+  document.getElementById("inicio").style.display =
+    "block";
 
-          scannerQR.clear();
+  document.getElementById("resultado").className =
+    "status";
 
-          scannerQR = null;
+  document.getElementById("resultado").textContent =
+    "Esperando código QR...";
 
-          mostrarInicio();
-
-        })
-        .catch(function() {
-
-          mostrarInicio();
-
-        });
-
-    } else {
-
-      mostrarInicio();
-
-    }
-
-  }
-
-
-  function mostrarInicio() {
-
-    document.getElementById("scanner").style.display =
-      "none";
-
-    document.getElementById("inicio").style.display =
-      "block";
-
-    document.getElementById("resultado").className =
-      "status";
-
-    document.getElementById("resultado").textContent =
-      "Esperando código QR...";
-
-  }
+}
 
 </script>
 
