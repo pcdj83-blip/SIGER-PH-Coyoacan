@@ -300,19 +300,93 @@ function iniciarRecorrido() {
 
   }
 
-  document.getElementById("inicio").style.display =
-    "none";
+  mostrarResultado(
+    "Iniciando recorrido..."
+  );
 
-  document.getElementById("scanner").style.display =
-    "block";
+  const callback = "sigerInicioRespuesta";
 
-  document.getElementById("usuarioActivo").textContent =
-    "Usuario de prueba";
+  const url =
+    URL_BACKEND +
+    "?accion=iniciar" +
+    "&usuario=" +
+    encodeURIComponent(usuario) +
+    "&callback=" +
+    callback;
 
-  iniciarCamara();
+  const script =
+    document.createElement("script");
+
+  script.src = url;
+
+  script.onerror = function() {
+
+    mostrarError(
+      "No fue posible iniciar el recorrido."
+    );
+
+    script.remove();
+
+  };
+
+  document.body.appendChild(script);
 
 }
 
+function sigerInicioRespuesta(respuesta) {
+
+  if (!respuesta.ok) {
+
+    mostrarError(
+      respuesta.mensaje ||
+      "No fue posible iniciar el recorrido."
+    );
+
+    return;
+
+  }
+
+  /*
+   * Guardamos el ID del recorrido
+   */
+
+  idRecorrido =
+    respuesta.idRecorrido;
+
+
+  /*
+   * Mostramos usuario e ID del recorrido
+   */
+
+  document.getElementById(
+    "usuarioActivo"
+  ).textContent =
+    respuesta.usuario +
+    " | " +
+    respuesta.idRecorrido;
+
+
+  /*
+   * Mostramos la pantalla del recorrido
+   */
+
+  document.getElementById(
+    "inicio"
+  ).style.display = "none";
+
+
+  document.getElementById(
+    "scanner"
+  ).style.display = "block";
+
+
+  /*
+   * Iniciamos la cámara
+   */
+
+  iniciarCamara();
+
+}  
 
 /* =====================================================
    CÁMARA
