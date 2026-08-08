@@ -157,6 +157,21 @@
       color: #991b1b;
     }
 
+    .contador-recorrido {
+  margin-top: 15px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.contador-recorrido strong {
+  color: #111827;
+}
+    
     .historial {
   margin-top: 15px;
   padding: 15px;
@@ -296,6 +311,20 @@
 
     </div>
 
+    <div id="contadorRecorrido" class="contador-recorrido">
+
+  <div>
+    <strong>Puntos registrados:</strong>
+    <span id="cantidadPuntos">0</span>
+  </div>
+
+  <div>
+    <strong>Último punto:</strong>
+    <span id="ultimoPunto">—</span>
+  </div>
+
+</div>
+    
     <div id="historial" class="historial">
 
   <div class="historial-titulo">
@@ -912,6 +941,40 @@ function mostrarResultado(mensaje) {
     return;
   }
 
+    const cantidad =
+  document.getElementById(
+    "cantidadPuntos"
+  );
+
+const ultimo =
+  document.getElementById(
+    "ultimoPunto"
+  );
+
+if (cantidad) {
+
+  cantidad.textContent =
+    historialRecorrido.length;
+
+}
+
+if (ultimo) {
+
+  if (historialRecorrido.length > 0) {
+
+    ultimo.textContent =
+      historialRecorrido[
+        historialRecorrido.length - 1
+      ].codigo;
+
+  } else {
+
+    ultimo.textContent =
+      "—";
+
+  }
+
+}
 
   if (historialRecorrido.length === 0) {
 
