@@ -479,25 +479,52 @@ function enviarAlBackend(codigo) {
 
   }
 
+
+  if (!idRecorrido) {
+
+    mostrarError(
+      "No existe un recorrido activo."
+    );
+
+    escaneoProcesado = false;
+
+    return;
+
+  }
+
+
+  const usuario =
+    document.getElementById("usuario").value;
+
+
   const callback =
     "sigerRespuesta";
 
+
   const url =
     URL_BACKEND +
-    "?codigo=" +
+    "?accion=registrar" +
+    "&codigo=" +
     encodeURIComponent(codigo) +
+    "&usuario=" +
+    encodeURIComponent(usuario) +
+    "&idRecorrido=" +
+    encodeURIComponent(idRecorrido) +
     "&callback=" +
     callback;
+
 
   const script =
     document.createElement("script");
 
+
   script.src = url;
+
 
   script.onerror = function() {
 
     mostrarError(
-      "No fue posible comunicarse con SIGER."
+      "No fue posible registrar el escaneo."
     );
 
     escaneoProcesado = false;
@@ -505,6 +532,7 @@ function enviarAlBackend(codigo) {
     script.remove();
 
   };
+
 
   document.body.appendChild(script);
 
