@@ -18,6 +18,23 @@
       box-sizing: border-box;
     }
 
+    .btn-finalizar {
+  width: 100%;
+  margin-top: 12px;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: #b91c1c;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-finalizar:active {
+  transform: scale(0.98);
+}
+    
     body {
       margin: 0;
       min-height: 100vh;
@@ -244,6 +261,12 @@
     </div>
 
     <button
+  onclick="finalizarRecorrido()"
+  class="btn-finalizar">
+  FINALIZAR RECORRIDO
+</button>
+    
+    <button
       class="back"
       onclick="volverInicio()">
 
@@ -282,6 +305,7 @@ let scannerQR = null;
 
 let escaneoProcesado = false;
 
+let idRecorrido = null;
 
 /* =====================================================
    INICIAR RECORRIDO
@@ -388,6 +412,160 @@ function sigerInicioRespuesta(respuesta) {
 
 }  
 
+  function finalizarRecorrido() {
+
+  if (!idRecorrido) {
+
+    mostrarError(
+      "No existe un recorrido activo."
+    );
+
+    return;
+
+  }
+
+
+  const confirmar =
+    confirm(
+      "¿Deseas finalizar este recorrido?"
+    );
+
+
+  if (!confirmar) {
+
+    return;
+
+  }
+
+
+  mostrarResultado(
+    "Finalizando recorrido..."
+  );
+
+
+  const callback =
+    "sigerFinalizarRespuesta";
+
+
+  const url =
+    URL_BACKEND +
+    "?accion=finalizar" +
+    "&idRecorrido=" +
+    encodeURIComponent(idRecorrido) +
+    "&callback=" +
+    callback;
+
+
+  const script =
+    document.createElement("script");
+
+
+  script.src = url;
+
+
+  script.onerror = function() {
+
+    mostrarError(
+      "No fue posible finalizar el recorrido."
+    );
+
+    script.remove();
+
+  };
+
+
+  document.body.appendChild(script);
+
+}
+
+  function sigerFinalizarRespuesta(respuesta) {
+
+  if (!respuesta.ok) {
+
+    mostrarError(
+      respuesta.mensaje ||
+      "No fue posible finalizar el recorrido."
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Detener la cámara
+   */
+
+  if (scannerQR) {
+
+  scannerQR.stop()
+    .then(function() {
+
+      return scannerQR.clear();
+
+    })
+    .catch(function() {
+
+      return scannerQR.clear();
+
+    })
+    .finally(function() {
+
+      scannerQR = null;
+
+    });
+
+}
+
+
+  /*
+   * Mostrar confirmación
+   */
+
+  mostrarResultado(
+    "✓ RECORRIDO FINALIZADO\n\n" +
+    "ID: " +
+    respuesta.idRecorrido +
+    "\n\n" +
+    "Fin: " +
+    new Date(
+      respuesta.fin
+    ).toLocaleString()
+  );
+
+
+  /*
+   * Ya no existe recorrido activo
+   */
+
+  idRecorrido = null;
+
+
+  /*
+   * Después de unos segundos,
+   * regresar a la pantalla inicial.
+   */
+
+  setTimeout(function() {
+
+    document.getElementById(
+      "scanner"
+    ).style.display = "none";
+
+
+    document.getElementById(
+      "inicio"
+    ).style.display = "block";
+
+
+    document.getElementById(
+      "usuarioActivo"
+    ).textContent = "";
+
+  }, 3000);
+
+}
+  
 /* =====================================================
    CÁMARA
    ===================================================== */
