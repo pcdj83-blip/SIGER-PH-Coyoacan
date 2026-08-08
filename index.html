@@ -2,12 +2,16 @@
 <html lang="es">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
   <title>SIGER - Coyoacán</title>
+
+  <!-- Lector QR -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
 
@@ -20,51 +24,46 @@
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
       background: #f3f4f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     .app {
       width: 100%;
       max-width: 430px;
       min-height: 100vh;
+      margin: auto;
       background: white;
-      display: flex;
-      flex-direction: column;
     }
 
     .header {
       background: #111827;
       color: white;
-      padding: 28px 20px;
+      padding: 25px 20px;
       text-align: center;
     }
 
     .logo {
-      font-size: 38px;
+      font-size: 36px;
       font-weight: bold;
       letter-spacing: 3px;
     }
 
     .subtitle {
-      margin-top: 8px;
-      font-size: 14px;
-      opacity: 0.85;
+      margin-top: 7px;
+      font-size: 13px;
+      opacity: .85;
     }
 
     .content {
-      flex: 1;
-      padding: 30px 22px;
+      padding: 25px 20px;
     }
 
     .welcome {
       text-align: center;
-      margin-bottom: 35px;
+      margin-bottom: 30px;
     }
 
     .welcome h2 {
-      margin: 0 0 10px 0;
+      margin: 0 0 8px;
       color: #1f2937;
     }
 
@@ -75,10 +74,10 @@
     }
 
     .field {
-      margin-bottom: 25px;
+      margin-bottom: 22px;
     }
 
-    .field label {
+    label {
       display: block;
       margin-bottom: 8px;
       font-weight: bold;
@@ -87,16 +86,16 @@
 
     select {
       width: 100%;
-      padding: 15px;
+      padding: 14px;
       border: 1px solid #d1d5db;
       border-radius: 10px;
       font-size: 16px;
       background: white;
     }
 
-    .button {
+    button {
       width: 100%;
-      padding: 17px;
+      padding: 16px;
       border: none;
       border-radius: 10px;
       background: #006847;
@@ -106,13 +105,43 @@
       cursor: pointer;
     }
 
-    .button:active {
-      transform: scale(0.98);
+    button:active {
+      transform: scale(.98);
     }
 
-    .button:disabled {
-      background: #9ca3af;
-      cursor: not-allowed;
+    .scanner {
+      display: none;
+    }
+
+    #reader {
+      width: 100%;
+      margin-top: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #f3f4f6;
+      text-align: center;
+      color: #374151;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .back {
+      margin-top: 15px;
+      background: #374151;
     }
 
     .footer {
@@ -124,101 +153,303 @@
     }
 
   </style>
+
 </head>
 
 <body>
 
-  <div class="app">
+<div class="app">
 
-    <header class="header">
+  <!-- ENCABEZADO -->
 
-      <div class="logo">
-        SIGER
-      </div>
+  <header class="header">
 
-      <div class="subtitle">
-        Sistema Integral de Gestión de Recorridos
-      </div>
+    <div class="logo">
+      SIGER
+    </div>
 
-    </header>
+    <div class="subtitle">
+      Sistema Integral de Gestión de Recorridos
+    </div>
 
-    <main class="content">
-
-      <div class="welcome">
-
-        <h2>
-          Iniciar recorrido
-        </h2>
-
-        <p>
-          Selecciona el usuario para comenzar.
-        </p>
-
-      </div>
-
-      <div class="field">
-
-        <label for="usuario">
-          Usuario
-        </label>
-
-        <select id="usuario">
-
-          <option value="">
-            Seleccionar usuario
-          </option>
-
-          <option value="demo">
-            Usuario de prueba
-          </option>
-
-        </select>
-
-      </div>
-
-      <button
-        id="btnIniciar"
-        class="button"
-        onclick="iniciarRecorrido()">
-
-        INICIAR RECORRIDO
-
-      </button>
-
-    </main>
-
-    <footer class="footer">
-
-      SIGER PH - Coyoacán<br>
-      Versión 1.0
-
-    </footer>
-
-  </div>
+  </header>
 
 
-  <script>
+  <!-- PANTALLA INICIAL -->
 
-    function iniciarRecorrido() {
+  <main id="inicio" class="content">
 
-      const usuario =
-        document.getElementById("usuario").value;
+    <div class="welcome">
 
-      if (!usuario) {
+      <h2>
+        Iniciar recorrido
+      </h2>
 
-        alert("Selecciona un usuario para continuar.");
+      <p>
+        Selecciona el usuario para comenzar.
+      </p>
 
-        return;
+    </div>
 
-      }
 
-      alert(
-        "Recorrido iniciado correctamente."
-      );
+    <div class="field">
+
+      <label for="usuario">
+        Usuario
+      </label>
+
+      <select id="usuario">
+
+        <option value="">
+          Seleccionar usuario
+        </option>
+
+        <option value="demo">
+          Usuario de prueba
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <button onclick="iniciarRecorrido()">
+
+      INICIAR RECORRIDO
+
+    </button>
+
+  </main>
+
+
+  <!-- PANTALLA DE ESCANEO -->
+
+  <main id="scanner" class="content scanner">
+
+    <div class="welcome">
+
+      <h2>
+        Recorrido activo
+      </h2>
+
+      <p id="usuarioActivo">
+        Usuario de prueba
+      </p>
+
+    </div>
+
+
+    <div id="reader"></div>
+
+
+    <div id="resultado" class="status">
+
+      Esperando código QR...
+
+    </div>
+
+
+    <button
+      class="back"
+      onclick="volverInicio()">
+
+      VOLVER
+
+    </button>
+
+  </main>
+
+
+  <footer class="footer">
+
+    SIGER PH - Coyoacán<br>
+    Versión 1.0
+
+  </footer>
+
+</div>
+
+
+<script>
+
+  let scannerQR = null;
+
+  let escaneoProcesado = false;
+
+
+  function iniciarRecorrido() {
+
+    const usuario =
+      document.getElementById("usuario").value;
+
+
+    if (!usuario) {
+
+      alert("Selecciona un usuario para continuar.");
+
+      return;
 
     }
 
-  </script>
+
+    document.getElementById("inicio").style.display = "none";
+
+    document.getElementById("scanner").style.display = "block";
+
+
+    document.getElementById("usuarioActivo").textContent =
+      "Usuario de prueba";
+
+
+    iniciarCamara();
+
+  }
+
+
+  function iniciarCamara() {
+
+    scannerQR = new Html5Qrcode("reader");
+
+
+    const configuracion = {
+
+      fps: 10,
+
+      qrbox: {
+        width: 250,
+        height: 250
+      },
+
+      aspectRatio: 1.0
+
+    };
+
+
+    scannerQR.start(
+
+      {
+        facingMode: "environment"
+      },
+
+      configuracion,
+
+      codigoDetectado,
+
+      errorEscaneo
+
+    )
+
+    .catch(function(error) {
+
+      mostrarError(
+        "No fue posible acceder a la cámara."
+      );
+
+      console.error(error);
+
+    });
+
+  }
+
+
+  function codigoDetectado(codigo) {
+
+    if (escaneoProcesado) {
+      return;
+    }
+
+
+    escaneoProcesado = true;
+
+
+    document.getElementById("resultado").className =
+      "status success";
+
+
+    document.getElementById("resultado").textContent =
+      "✓ Código detectado: " + codigo;
+
+
+    console.log("QR detectado:", codigo);
+
+
+    setTimeout(function() {
+
+      escaneoProcesado = false;
+
+    }, 2000);
+
+  }
+
+
+  function errorEscaneo(error) {
+
+    // Los errores normales de lectura
+    // no necesitan mostrarse al usuario.
+
+  }
+
+
+  function mostrarError(mensaje) {
+
+    const resultado =
+      document.getElementById("resultado");
+
+    resultado.className =
+      "status error";
+
+    resultado.textContent =
+      mensaje;
+
+  }
+
+
+  function volverInicio() {
+
+    if (scannerQR) {
+
+      scannerQR.stop()
+        .then(function() {
+
+          scannerQR.clear();
+
+          scannerQR = null;
+
+          mostrarInicio();
+
+        })
+        .catch(function() {
+
+          mostrarInicio();
+
+        });
+
+    } else {
+
+      mostrarInicio();
+
+    }
+
+  }
+
+
+  function mostrarInicio() {
+
+    document.getElementById("scanner").style.display =
+      "none";
+
+    document.getElementById("inicio").style.display =
+      "block";
+
+    document.getElementById("resultado").className =
+      "status";
+
+    document.getElementById("resultado").textContent =
+      "Esperando código QR...";
+
+  }
+
+</script>
 
 </body>
 
