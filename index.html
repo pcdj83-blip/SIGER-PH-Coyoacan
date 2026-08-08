@@ -173,6 +173,39 @@
   text-align: left;
 }
 
+    .progreso-recorrido {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+}
+
+.progreso-texto {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #374151;
+  text-align: center;
+}
+
+.barra-progreso {
+  width: 100%;
+  height: 12px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.barra-progreso-valor {
+  height: 100%;
+  width: 0%;
+  background: #047857;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+    
 .contador-recorrido strong {
   color: #111827;
 }
@@ -332,6 +365,23 @@ de
   <div>
     <strong>Último punto:</strong>
     <span id="ultimoPunto">—</span>
+  </div>
+
+</div>
+
+    <div id="progresoRecorrido" class="progreso-recorrido">
+
+  <div class="progreso-texto">
+    Progreso del recorrido:
+    <span id="porcentajeProgreso">0%</span>
+  </div>
+
+  <div class="barra-progreso">
+    <div
+      id="barraProgreso"
+      class="barra-progreso-valor"
+      style="width: 0%;">
+    </div>
   </div>
 
 </div>
@@ -966,6 +1016,16 @@ function mostrarResultado(mensaje) {
   document.getElementById(
     "totalPuntos"
   ); 
+
+    const barra =
+  document.getElementById(
+    "barraProgreso"
+  );
+
+const porcentaje =
+  document.getElementById(
+    "porcentajeProgreso"
+  );
     
 const ultimo =
   document.getElementById(
@@ -985,6 +1045,38 @@ if (cantidad) {
     totalPuntos;
 
 } 
+
+    let progreso = 0;
+
+if (totalPuntos > 0) {
+
+  progreso =
+    (
+      historialRecorrido.length /
+      totalPuntos
+    ) * 100;
+
+}
+
+progreso =
+  Math.min(
+    Math.max(progreso, 0),
+    100
+  );
+
+if (barra) {
+
+  barra.style.width =
+    progreso.toFixed(1) + "%";
+
+}
+
+if (porcentaje) {
+
+  porcentaje.textContent =
+    progreso.toFixed(1) + "%";
+
+}
     
 if (ultimo) {
 
