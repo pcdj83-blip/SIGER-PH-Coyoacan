@@ -570,15 +570,59 @@ mostrarHistorial();
 
 
   document.getElementById(
-    "scanner"
-  ).style.display = "block";
+  "scanner"
+).style.display = "block";
 
 
-  /*
-   * Iniciamos la cámara
-   */
+/*
+ * Restaurar lector de cámara
+ */
 
-  iniciarCamara();
+document.getElementById(
+  "reader"
+).style.display = "block";
+
+
+/*
+ * Restaurar título
+ */
+
+const titulo =
+  document.querySelector(
+    "#scanner h2"
+  );
+
+if (titulo) {
+
+  titulo.textContent =
+    "Recorrido activo";
+
+}
+
+
+/*
+ * Restaurar botón FINALIZAR
+
+ */
+
+const botonFinalizar =
+  document.querySelector(
+    'button[onclick="finalizarRecorrido()"]'
+  );
+
+if (botonFinalizar) {
+
+  botonFinalizar.style.display =
+    "block";
+
+}
+
+
+/*
+ * Iniciamos la cámara
+ */
+
+iniciarCamara();
 
 }  
 
@@ -710,7 +754,7 @@ if (
 
 
   /*
-   * Detener la cámara
+   * Detener y limpiar la cámara
    */
 
   if (scannerQR) {
@@ -736,38 +780,7 @@ if (
 
 
   /*
-   * Mostrar pantalla de recorrido finalizado
-   */
-
-  const tituloRecorrido =
-    document.querySelector(
-      "#scanner h2"
-    );
-
-  if (tituloRecorrido) {
-
-    tituloRecorrido.textContent =
-      "Recorrido finalizado";
-
-  }
-
-
-  /*
-   * Ocultar el lector de cámara
-   */
-
-  const reader =
-    document.getElementById("reader");
-
-  if (reader) {
-
-    reader.style.display = "none";
-
-  }
-
-
-  /*
-   * Mostrar resultado final
+   * Mostrar resultado de finalización
    */
 
   mostrarResultado(
@@ -783,44 +796,131 @@ if (
 
 
   /*
-   * Ocultar botón FINALIZAR RECORRIDO
-   */
-
-  const botonFinalizar =
-    document.querySelector(
-      'button[onclick="finalizarRecorrido()"]'
-    );
-
-  if (botonFinalizar) {
-
-    botonFinalizar.style.display =
-      "none";
-
-  }
-
-
-  /*
-   * Mantener visible el botón VOLVER
-   */
-
-  const botonVolver =
-    document.querySelector(
-      'button[onclick="volverInicio()"]'
-    );
-
-  if (botonVolver) {
-
-    botonVolver.style.display =
-      "block";
-
-  }
-
-
-  /*
-   * Ya no existe un recorrido activo
+   * Ya no existe recorrido activo
    */
 
   idRecorrido = null;
+
+  escaneoProcesado = false;
+
+
+  /*
+   * Después de 3 segundos,
+   * regresar a la pantalla inicial
+   */
+
+  setTimeout(function() {
+
+    /*
+     * Ocultar pantalla del recorrido
+     */
+
+    document.getElementById(
+      "scanner"
+    ).style.display = "none";
+
+
+    /*
+     * Mostrar pantalla inicial
+     */
+
+    document.getElementById(
+      "inicio"
+    ).style.display = "block";
+
+
+    /*
+     * Limpiar usuario activo
+     */
+
+    document.getElementById(
+      "usuarioActivo"
+    ).textContent = "";
+
+
+    /*
+     * Restaurar título para el siguiente recorrido
+     */
+
+    const titulo =
+      document.querySelector(
+        "#scanner h2"
+      );
+
+    if (titulo) {
+
+      titulo.textContent =
+        "Recorrido activo";
+
+    }
+
+
+    /*
+     * Restaurar lector de cámara
+     */
+
+    const reader =
+      document.getElementById(
+        "reader"
+      );
+
+    if (reader) {
+
+      reader.style.display =
+        "block";
+
+    }
+
+
+    /*
+     * Restaurar botón FINALIZAR
+     */
+
+    const botonFinalizar =
+      document.querySelector(
+        'button[onclick="finalizarRecorrido()"]'
+      );
+
+    if (botonFinalizar) {
+
+      botonFinalizar.style.display =
+        "block";
+
+    }
+
+
+    /*
+     * Restaurar botón VOLVER
+     */
+
+    const botonVolver =
+      document.querySelector(
+        'button[onclick="volverInicio()"]'
+      );
+
+    if (botonVolver) {
+
+      botonVolver.style.display =
+        "block";
+
+    }
+
+
+    /*
+     * Reiniciar variables visuales
+     */
+
+    puntosRecorridos = new Set();
+
+    historialRecorrido = [];
+
+    puntosActivos = [];
+
+    totalPuntos = 0;
+
+    mostrarHistorial();
+
+  }, 3000);
 
 }
 
