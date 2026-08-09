@@ -479,6 +479,8 @@ function iniciarRecorrido() {
     "Iniciando recorrido..."
   );
 
+  cargarPuntosActivos();
+  
   const callback = "sigerInicioRespuesta";
 
   const url =
@@ -773,6 +775,60 @@ if (
     ).textContent = "";
 
   }, 3000);
+
+}
+
+ function cargarPuntosActivos() {
+
+  const callback =
+    "sigerPuntosRespuesta";
+
+  const url =
+    URL_BACKEND +
+    "?accion=obtenerPuntos" +
+    "&callback=" +
+    callback;
+
+  const script =
+    document.createElement("script");
+
+  script.src = url;
+
+  script.onerror = function() {
+
+    mostrarError(
+      "No fue posible cargar los puntos del recorrido."
+    );
+
+    script.remove();
+
+  };
+
+  document.body.appendChild(script);
+
+} 
+
+  function sigerPuntosRespuesta(respuesta) {
+
+  if (!respuesta || !respuesta.ok) {
+
+    mostrarError(
+      respuesta &&
+      respuesta.mensaje
+        ? respuesta.mensaje
+        : "No fue posible cargar los puntos."
+    );
+
+    return;
+  }
+
+  puntosActivos =
+    respuesta.puntos || [];
+
+  console.log(
+    "Puntos activos cargados:",
+    puntosActivos.length
+  );
 
 }
   
