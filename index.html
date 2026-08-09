@@ -308,15 +308,11 @@
 
       <select id="usuario">
 
-        <option value="">
-          Seleccionar usuario
-        </option>
+  <option value="">
+    Cargando usuarios...
+  </option>
 
-        <option value="demo">
-          Usuario de prueba
-        </option>
-
-      </select>
+</select>
 
     </div>
 
@@ -982,6 +978,88 @@ mostrarResultado(
   );
 
 }
+
+function cargarUsuariosActivos() {
+
+  const callback =
+    "sigerUsuariosRespuesta";
+
+  const url =
+    URL_BACKEND +
+    "?accion=obtenerUsuarios" +
+    "&callback=" +
+    callback;
+
+  const script =
+    document.createElement("script");
+
+  script.src = url;
+
+  script.onerror = function() {
+
+    mostrarError(
+      "No fue posible cargar los usuarios."
+    );
+
+    script.remove();
+
+  };
+
+  document.body.appendChild(script);
+
+}
+
+
+function sigerUsuariosRespuesta(respuesta) {
+
+  const selector =
+    document.getElementById("usuario");
+
+  if (!selector) {
+    return;
+  }
+
+  if (!respuesta || !respuesta.ok) {
+
+    selector.innerHTML =
+      '<option value="">Error al cargar usuarios</option>';
+
+    mostrarError(
+      respuesta &&
+      respuesta.mensaje
+        ? respuesta.mensaje
+        : "No fue posible cargar los usuarios."
+    );
+
+    return;
+  }
+
+  const usuarios =
+    respuesta.usuarios || [];
+
+  selector.innerHTML =
+    '<option value="">Seleccionar usuario</option>';
+
+  usuarios.forEach(function(usuario) {
+
+    const opcion =
+      document.createElement("option");
+
+    opcion.value =
+      usuario.id;
+
+    opcion.textContent =
+      usuario.nombre +
+      " | " +
+      usuario.puesto +
+      " | Turno " +
+      usuario.turno;
+
+    selector.appendChild(opcion);
+
+  });
+
+}
   
 /* =====================================================
    CÁMARA
@@ -1532,6 +1610,8 @@ function mostrarInicio() {
   mostrarHistorial();
 
 }
+
+  cargarUsuariosActivos();
 </script>
 
 </body>
