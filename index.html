@@ -356,11 +356,17 @@
     <div id="contadorRecorrido" class="contador-recorrido">
 
   <div>
+   <div>
     <strong>Puntos registrados:</strong>
-<span id="cantidadPuntos">0</span>
-de
-<span id="totalPuntos">0</span>
-  </div>
+    <span id="cantidadPuntos">0</span>
+    de
+    <span id="totalPuntos">0</span>
+</div>
+
+<div>
+    <strong>Puntos pendientes:</strong>
+    <span id="puntosPendientes">0</span>
+</div>
 
   <div>
     <strong>Último punto:</strong>
@@ -1133,6 +1139,11 @@ function mostrarResultado(mensaje) {
     "totalPuntos"
   ); 
 
+    const pendientes =
+    document.getElementById(
+        "puntosPendientes"
+    );
+    
     const barra =
   document.getElementById(
     "barraProgreso"
@@ -1162,6 +1173,16 @@ if (cantidad) {
 
 } 
 
+    if (pendientes) {
+
+    pendientes.textContent =
+        Math.max(
+            totalPuntos - historialRecorrido.length,
+            0
+        );
+
+}
+    
     let progreso = 0;
 
 if (totalPuntos > 0) {
