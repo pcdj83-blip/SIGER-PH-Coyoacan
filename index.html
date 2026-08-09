@@ -1022,31 +1022,37 @@ function sigerRespuesta(respuesta) {
     /*
      * Guardamos el código como registrado
      */
-    puntosRecorridos.add(
-      respuesta.codigo
-    );
+    const codigoEscaneado =
+  String(respuesta.codigo || "").trim();
 
+const esNuevo =
+  !puntosRecorridos.has(codigoEscaneado);
 
-    /*
-     * Agregamos al historial visual
-     */
-    historialRecorrido.push({
+puntosRecorridos.add(
+  codigoEscaneado
+);
 
-      codigo:
-        respuesta.codigo,
+if (esNuevo) {
 
-      punto:
-        respuesta.punto ||
-        "Sin nombre",
+  historialRecorrido.push({
 
-      piso:
-        respuesta.piso ||
-        "",
+    codigo:
+      codigoEscaneado,
 
-      hora:
-        new Date()
+    punto:
+      respuesta.punto ||
+      "Sin nombre",
 
-    });
+    piso:
+      respuesta.piso ||
+      "",
+
+    hora:
+      new Date()
+
+  });
+
+}
 
 
     mostrarHistorial();
