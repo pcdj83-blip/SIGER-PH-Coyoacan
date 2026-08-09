@@ -736,52 +736,96 @@ if (
 }
 
 
-  /*
-   * Mostrar confirmación
-   */
+ /*
+ * Mostrar pantalla de recorrido finalizado
+ */
 
-  mostrarResultado(
-    "✓ RECORRIDO FINALIZADO\n\n" +
-    "ID: " +
-    respuesta.idRecorrido +
-    "\n\n" +
-    "Fin: " +
-    new Date(
-      respuesta.fin
-    ).toLocaleString()
-  );
+const scanner =
+    document.getElementById("scanner");
+
+if (scanner) {
+    scanner.style.display = "block";
+}
 
 
-  /*
-   * Ya no existe recorrido activo
-   */
+/*
+ * Ocultar cámara
+ */
 
-  idRecorrido = null;
+const reader =
+    document.getElementById("reader");
 
-
-  /*
-   * Después de unos segundos,
-   * regresar a la pantalla inicial.
-   */
-
-  setTimeout(function() {
-
-    document.getElementById(
-      "scanner"
-    ).style.display = "none";
+if (reader) {
+    reader.style.display = "none";
+}
 
 
-    document.getElementById(
-      "inicio"
-    ).style.display = "block";
+/*
+ * Ocultar botón FINALIZAR RECORRIDO
+ */
+
+const botonFinalizar =
+    document.querySelector(
+        'button[onclick="finalizarRecorrido()"]'
+    );
+
+if (botonFinalizar) {
+    botonFinalizar.style.display = "none";
+}
 
 
-    document.getElementById(
-      "usuarioActivo"
-    ).textContent = "";
+/*
+ * Mantener visible el botón VOLVER
+ */
 
-  }, 3000);
+const botonVolver =
+    document.querySelector(
+        'button[onclick="volverInicio()"]'
+    );
 
+if (botonVolver) {
+    botonVolver.style.display = "block";
+}
+
+
+/*
+ * Cambiar título
+ */
+
+const tituloRecorrido =
+    document.querySelector(
+        "#scanner h2"
+    );
+
+if (tituloRecorrido) {
+    tituloRecorrido.textContent =
+        "Recorrido finalizado";
+}
+
+
+/*
+ * Mantener visible el resumen
+ */
+
+const resultado =
+    document.getElementById("resultado");
+
+if (resultado) {
+    resultado.style.display = "block";
+}
+
+
+/*
+ * Mostrar botón volver
+ */
+
+const botonVolver =
+    document.querySelector(
+        'button[onclick="volverInicio()"]'
+    );
+
+if (botonVolver) {
+    botonVolver.style.display = "block";
 }
 
  function cargarPuntosActivos() {
