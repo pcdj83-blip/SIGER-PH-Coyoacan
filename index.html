@@ -706,7 +706,6 @@ if (
     );
 
     return;
-
   }
 
 
@@ -716,116 +715,113 @@ if (
 
   if (scannerQR) {
 
-  scannerQR.stop()
-    .then(function() {
+    scannerQR.stop()
+      .then(function() {
 
-      return scannerQR.clear();
+        return scannerQR.clear();
 
-    })
-    .catch(function() {
+      })
+      .catch(function() {
 
-      return scannerQR.clear();
+        return scannerQR.clear();
 
-    })
-    .finally(function() {
+      })
+      .finally(function() {
 
-      scannerQR = null;
+        scannerQR = null;
 
-    });
+      });
 
-}
-
-
- /*
- * Mostrar pantalla de recorrido finalizado
- */
-
-const scanner =
-    document.getElementById("scanner");
-
-if (scanner) {
-    scanner.style.display = "block";
-}
+  }
 
 
-/*
- * Ocultar cámara
- */
+  /*
+   * Mostrar pantalla de recorrido finalizado
+   */
 
-const reader =
+  const tituloRecorrido =
+    document.querySelector(
+      "#scanner h2"
+    );
+
+  if (tituloRecorrido) {
+
+    tituloRecorrido.textContent =
+      "Recorrido finalizado";
+
+  }
+
+
+  /*
+   * Ocultar el lector de cámara
+   */
+
+  const reader =
     document.getElementById("reader");
 
-if (reader) {
+  if (reader) {
+
     reader.style.display = "none";
-}
+
+  }
 
 
-/*
- * Ocultar botón FINALIZAR RECORRIDO
- */
+  /*
+   * Mostrar resultado final
+   */
 
-const botonFinalizar =
+  mostrarResultado(
+    "✓ RECORRIDO FINALIZADO\n\n" +
+    "ID: " +
+    respuesta.idRecorrido +
+    "\n\n" +
+    "Fin: " +
+    new Date(
+      respuesta.fin
+    ).toLocaleString()
+  );
+
+
+  /*
+   * Ocultar botón FINALIZAR RECORRIDO
+   */
+
+  const botonFinalizar =
     document.querySelector(
-        'button[onclick="finalizarRecorrido()"]'
+      'button[onclick="finalizarRecorrido()"]'
     );
 
-if (botonFinalizar) {
-    botonFinalizar.style.display = "none";
-}
+  if (botonFinalizar) {
+
+    botonFinalizar.style.display =
+      "none";
+
+  }
 
 
-/*
- * Mantener visible el botón VOLVER
- */
+  /*
+   * Mantener visible el botón VOLVER
+   */
 
-const botonVolver =
+  const botonVolver =
     document.querySelector(
-        'button[onclick="volverInicio()"]'
+      'button[onclick="volverInicio()"]'
     );
 
-if (botonVolver) {
-    botonVolver.style.display = "block";
-}
+  if (botonVolver) {
+
+    botonVolver.style.display =
+      "block";
+
+  }
 
 
-/*
- * Cambiar título
- */
+  /*
+   * Ya no existe un recorrido activo
+   */
 
-const tituloRecorrido =
-    document.querySelector(
-        "#scanner h2"
-    );
+  idRecorrido = null;
 
-if (tituloRecorrido) {
-    tituloRecorrido.textContent =
-        "Recorrido finalizado";
-}
-
-
-/*
- * Mantener visible el resumen
- */
-
-const resultado =
-    document.getElementById("resultado");
-
-if (resultado) {
-    resultado.style.display = "block";
-}
-
-
-/*
- * Mostrar botón volver
- */
-
-const botonVolver =
-    document.querySelector(
-        'button[onclick="volverInicio()"]'
-    );
-
-if (botonVolver) {
-    botonVolver.style.display = "block";
 }
 
  function cargarPuntosActivos() {
