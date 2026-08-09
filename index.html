@@ -1386,28 +1386,52 @@ function volverInicio() {
 
 function mostrarInicio() {
 
+  /*
+   * Ocultar pantalla del recorrido
+   */
   document.getElementById("scanner").style.display =
     "none";
 
+
+  /*
+   * Mostrar pantalla inicial
+   */
   document.getElementById("inicio").style.display =
     "block";
 
+
+  /*
+   * Restaurar mensaje
+   */
   document.getElementById("resultado").className =
     "status";
 
   document.getElementById("resultado").textContent =
     "Esperando código QR...";
 
+
+  /*
+   * Reiniciar variables del recorrido
+   */
   puntosRecorridos = new Set();
 
-historialRecorrido = [];
+  historialRecorrido = [];
 
-mostrarHistorial();
+  puntosActivos = [];
 
-idRecorrido = null;
+  totalPuntos = 0;
+
+  idRecorrido = null;
+
+  escaneoProcesado = false;
+
+
+  /*
+   * Restaurar historial visual
+   */
+  mostrarHistorial();
 
 }
-
 </script>
 
 </body>
