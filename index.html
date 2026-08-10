@@ -549,11 +549,13 @@ mostrarHistorial();
    */
 
   document.getElementById(
-    "usuarioActivo"
-  ).textContent =
-    respuesta.usuario +
-    " | " +
-    respuesta.idRecorrido;
+  "usuarioActivo"
+).textContent =
+  (respuesta.nombreUsuario || respuesta.usuario) +
+  " | " +
+  respuesta.usuario +
+  " | " +
+  respuesta.idRecorrido;
 
 
   /*
