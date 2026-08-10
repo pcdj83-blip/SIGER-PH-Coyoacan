@@ -709,6 +709,157 @@ iniciarCamara();
 
   document.body.appendChild(script);
 }
+
+  function sigerContinuarRecorridoRespuesta(respuesta) {
+
+  if (!respuesta.ok) {
+
+    mostrarError(
+      respuesta.mensaje ||
+      "No fue posible recuperar el recorrido."
+    );
+
+    return;
+  }
+
+  if (!respuesta.existe) {
+
+    mostrarError(
+      "No existe un recorrido activo para este usuario."
+    );
+
+    return;
+  }
+
+  /*
+   * Recuperar datos del recorrido
+   */
+
+  idRecorrido =
+    respuesta.idRecorrido;
+
+  totalPuntos =
+    Number(respuesta.totalPuntos) || 0;
+
+  /*
+   * Reconstruir puntos registrados
+   */
+
+  puntosRecorridos = new Set();
+
+  historialRecorrido = [];
+
+  const registros =
+    Array.isArray(respuesta.registros)
+      ? respuesta.registros
+      : [];
+
+  registros.forEach(function(registro) {
+
+    if (registro.codigo) {
+
+      puntosRecorridos.add(
+        String(registro.codigo)
+      );
+
+    }
+
+    historialRecorrido.push({
+
+      codigo:
+        registro.codigo || "",
+
+      punto:
+        registro.punto || "Sin nombre",
+
+      piso:
+        registro.piso || "",
+
+      hora:
+        registro.fechaHora || ""
+
+    });
+
+  });
+
+  /*
+   * Mostrar progreso recuperado
+   */
+
+  mostrarHistorial();
+
+  /*
+   * Mostrar usuario e ID del recorrido
+   */
+
+  document.getElementById(
+    "usuarioActivo"
+  ).textContent =
+    (respuesta.nombreUsuario || respuesta.usuario) +
+    " | " +
+    respuesta.usuario +
+    " | " +
+    respuesta.idRecorrido;
+
+  /*
+   * Mostrar pantalla del recorrido
+   */
+
+  document.getElementById(
+    "inicio"
+  ).style.display = "none";
+
+  document.getElementById(
+    "scanner"
+  ).style.display = "block";
+
+  /*
+   * Restaurar lector
+   */
+
+  document.getElementById(
+    "reader"
+  ).style.display = "block";
+
+  /*
+   * Restaurar título
+   */
+
+  const titulo =
+    document.querySelector(
+      "#scanner h2"
+    );
+
+  if (titulo) {
+
+    titulo.textContent =
+      "Recorrido activo";
+
+  }
+
+  /*
+   * Restaurar botón FINALIZAR
+   */
+
+  const botonFinalizar =
+    document.querySelector(
+      'button[onclick="finalizarRecorrido()"]'
+    );
+
+  if (botonFinalizar) {
+
+    botonFinalizar.style.display =
+      "block";
+
+  }
+
+  /*
+   * Iniciar cámara
+   */
+
+  iniciarCamara();
+
+}
   
   function finalizarRecorrido() {
 
