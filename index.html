@@ -532,15 +532,39 @@ function sigerInicioRespuesta(respuesta) {
 
     if (respuesta.idRecorrido) {
 
-      resultadoInicio.textContent +=
-        "\nID del recorrido activo: " +
-        respuesta.idRecorrido;
-    }
+  resultadoInicio.textContent +=
+    "\nID del recorrido activo: " +
+    respuesta.idRecorrido;
+
+  if (respuesta.error === "RECORRIDO_ACTIVO") {
+
+    const botonContinuar =
+      document.createElement("button");
+
+    botonContinuar.textContent =
+      "CONTINUAR RECORRIDO";
+
+    botonContinuar.type = "button";
+
+    botonContinuar.style.marginTop =
+      "12px";
+
+    botonContinuar.onclick =
+      function() {
+        continuarRecorrido();
+      };
+
+    resultadoInicio.appendChild(
+      botonContinuar
+    );
+  }
+}
   }
 
-  return;
+return;
 }
-
+   
+   
   /*
    * Guardamos el ID del recorrido
    */
@@ -640,6 +664,52 @@ iniciarCamara();
 
 }  
 
+  function continuarRecorrido() {
+
+  const usuario =
+    document.getElementById("usuario").value;
+
+  if (!usuario) {
+
+    mostrarError(
+      "No fue posible identificar al usuario."
+    );
+
+    return;
+  }
+
+  mostrarResultado(
+    "Recuperando recorrido activo..."
+  );
+
+  const callback =
+    "sigerContinuarRecorridoRespuesta";
+
+  const url =
+    URL_BACKEND +
+    "?accion=obtenerRecorridoActivo" +
+    "&usuario=" +
+    encodeURIComponent(usuario) +
+    "&callback=" +
+    callback;
+
+  const script =
+    document.createElement("script");
+
+  script.src = url;
+
+  script.onerror = function() {
+
+    mostrarError(
+      "No fue posible recuperar el recorrido activo."
+    );
+
+    script.remove();
+  };
+
+  document.body.appendChild(script);
+}
+  
   function finalizarRecorrido() {
 
   if (!idRecorrido) {
