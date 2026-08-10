@@ -322,6 +322,8 @@
 
     </button>
 
+    <div id="resultadoInicio" class="status"></div>
+    
   </main>
 
 
@@ -514,16 +516,30 @@ function iniciarRecorrido() {
 
 function sigerInicioRespuesta(respuesta) {
 
-  if (!respuesta.ok) {
+ if (!respuesta.ok) {
 
-    mostrarError(
+  const resultadoInicio =
+    document.getElementById("resultadoInicio");
+
+  if (resultadoInicio) {
+
+    resultadoInicio.className =
+      "status error";
+
+    resultadoInicio.textContent =
       respuesta.mensaje ||
-      "No fue posible iniciar el recorrido."
-    );
+      "No fue posible iniciar el recorrido.";
 
-    return;
+    if (respuesta.idRecorrido) {
 
+      resultadoInicio.textContent +=
+        "\nID del recorrido activo: " +
+        respuesta.idRecorrido;
+    }
   }
+
+  return;
+}
 
   /*
    * Guardamos el ID del recorrido
