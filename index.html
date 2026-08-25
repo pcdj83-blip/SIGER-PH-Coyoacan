@@ -717,11 +717,35 @@ function sigerRevisionRecorridoRespuesta(respuesta) {
   const resultadoInicio =
     document.getElementById("resultadoInicio");
 
+  const botonIniciar =
+    document.querySelector(
+      'button[onclick="iniciarRecorrido()"]'
+    );
+
   if (!resultadoInicio) {
     return;
   }
 
+  /*
+   * Limpiar botones CONTINUAR anteriores
+   */
+  const botonesContinuar =
+    resultadoInicio.querySelectorAll(
+      ".btn-continuar-recorrido"
+    );
+
+  botonesContinuar.forEach(function(boton) {
+    boton.remove();
+  });
+
+  /*
+   * Error al consultar
+   */
   if (!respuesta || !respuesta.ok) {
+
+    if (botonIniciar) {
+      botonIniciar.style.display = "block";
+    }
 
     resultadoInicio.className =
       "status error";
@@ -734,8 +758,14 @@ function sigerRevisionRecorridoRespuesta(respuesta) {
     return;
   }
 
-  // No existe recorrido activo
+  /*
+   * No existe recorrido activo
+   */
   if (!respuesta.existe) {
+
+    if (botonIniciar) {
+      botonIniciar.style.display = "block";
+    }
 
     resultadoInicio.className =
       "status";
@@ -745,7 +775,14 @@ function sigerRevisionRecorridoRespuesta(respuesta) {
     return;
   }
 
-  // Existe recorrido activo
+  /*
+   * Existe recorrido activo
+   */
+
+  if (botonIniciar) {
+    botonIniciar.style.display = "none";
+  }
+
   resultadoInicio.className =
     "status error";
 
@@ -756,6 +793,9 @@ function sigerRevisionRecorridoRespuesta(respuesta) {
 
   const botonContinuar =
     document.createElement("button");
+
+  botonContinuar.className =
+    "btn-continuar-recorrido";
 
   botonContinuar.textContent =
     "CONTINUAR RECORRIDO";
