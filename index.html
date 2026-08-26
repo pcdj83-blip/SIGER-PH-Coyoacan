@@ -895,6 +895,25 @@ function sigerRevisionRecorridoRespuesta(respuesta) {
   totalPuntos =
     Number(respuesta.totalPuntos) || 0;
 
+    /*
+ * Restaurar usuario seleccionado
+ */
+
+const selectorUsuario =
+  document.getElementById("usuario");
+
+if (selectorUsuario && respuesta.usuario) {
+
+  selectorUsuario.value =
+    respuesta.usuario;
+
+  localStorage.setItem(
+    "sigerUsuario",
+    respuesta.usuario
+  );
+
+}
+
   /*
    * Reconstruir puntos registrados
    */
@@ -1102,13 +1121,18 @@ if (
     "sigerFinalizarRespuesta";
 
 
-  const url =
-    URL_BACKEND +
-    "?accion=finalizar" +
-    "&idRecorrido=" +
-    encodeURIComponent(idRecorrido) +
-    "&callback=" +
-    callback;
+ const usuario =
+  document.getElementById("usuario").value;
+
+const url =
+  URL_BACKEND +
+  "?accion=finalizar" +
+  "&idRecorrido=" +
+  encodeURIComponent(idRecorrido) +
+  "&usuario=" +
+  encodeURIComponent(usuario) +
+  "&callback=" +
+  callback;
 
 
   const script =
