@@ -2079,6 +2079,20 @@ function mostrarInicio() {
 cargarUsuariosActivos();
 </script>
 
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js")
+      .then(function () {
+        console.log("SIGER: Service Worker registrado correctamente.");
+      })
+      .catch(function (error) {
+        console.error("SIGER: Error al registrar Service Worker:", error);
+      });
+  });
+}
+</script>
+
 </body>
 
 </html>
