@@ -1456,6 +1456,36 @@ function sigerUsuariosRespuesta(respuesta) {
 
   });
 
+    /*
+   * Recuperar último usuario utilizado
+   */
+
+  const usuarioGuardado =
+    localStorage.getItem("sigerUsuario");
+
+  if (usuarioGuardado) {
+
+    const existeUsuario =
+      usuarios.some(function(usuario) {
+
+        return String(usuario.id) ===
+          String(usuarioGuardado);
+
+      });
+
+    if (existeUsuario) {
+
+      selector.value =
+        usuarioGuardado;
+
+      revisarRecorridoActivo(
+        usuarioGuardado
+      );
+
+    }
+
+  }
+
 }
   
 /* =====================================================
@@ -2010,11 +2040,16 @@ function mostrarInicio() {
 
   document.getElementById("usuario").addEventListener("change", function() {
 
+  localStorage.setItem(
+    "sigerUsuario",
+    this.value
+  );
+
   revisarRecorridoActivo(this.value);
 
 });
-  
-  cargarUsuariosActivos();
+
+cargarUsuariosActivos();
 </script>
 
 </body>
